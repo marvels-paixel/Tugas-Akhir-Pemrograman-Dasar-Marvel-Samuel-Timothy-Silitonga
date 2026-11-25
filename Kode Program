@@ -1,1 +1,11 @@
-asdwasdwasdwasdwasdasdwasdwa
+<?php
+
+session start();
+
+const RUTE = [
+    ['asal' => 'Semarang', 'tujuan' => 'Yogyakarta', 'harga' => 110000, 'armada' => 'hiace'],
+    ['asal' => 'Semarang', 'tujuan' => 'Solo', 'harga' => 75000, 'armada' => 'hiace'],
+    ['asal' => 'Semarang', 'tujuan' => 'Surabaya', 'harga' => 150000, 'armada' => 'busmini'],
+    ['asal' => 'Semarang', 'tujuan' => 'Bandung', 'harga' => 210000, 'armada' => 'busmini'],
+];
+
