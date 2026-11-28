@@ -370,9 +370,7 @@ a { color: inherit; text-decoration: none; }
     color: #1a1300; 
 }
 
-.ruteyanglagidipilih2 { 
-    color: #4a3600; 
-}
+.ruteyanglagidipilih2 { color: #4a3600; }
 
 .jam { 
     display: flex; 
@@ -401,6 +399,207 @@ a { color: inherit; text-decoration: none; }
     font-size: .8rem; 
     color: var(--muted); 
 }
+
+.jamyanglagidipilih { 
+    border-color: var(--amber); 
+    box-shadow: inset 0 0 0 1px var(--amber); 
+}
+
+.jamyanglagidipilih2 { color: var(--amber); }
+
+main { 
+    display: grid; 
+    grid-template-columns: 1fr 340px; 
+    gap: 28px; 
+    padding: 28px 5vw 48px; 
+    align-items: start; 
+}
+
+@media (max-width: 960px) {  main {  grid-template-columns: 1fr; } }
+
+judul2 { 
+    margin: 0 0 14px; 
+    font: 700 1.25rem var(--display); 
+    letter-spacing: .02em; 
+}
+
+section { margin-bottom: 34px;}
+
+.notifikasi { 
+    padding: 12px 16px; 
+    margin-bottom: 22px; 
+    border-radius: 6px; 
+    border-left: 5px solid; 
+    background: var(--panel); 
+}
+
+.berhasil { 
+    border-color: var(--ok); 
+    color: var(--ok); 
+}
+
+.error { 
+    border-color: var(--err); 
+    color: var(--err); 
+}
+
+.wadahdenah { overflow-x: auto; }
+
+.bus { 
+    display: inline-flex; 
+    align-items: stretch; 
+    gap: 14px; 
+    padding: 18px 22px 18px 14px;
+    border: 2px solid var(--line); 
+    border-radius: 56px 16px 16px 56px; 
+    background: var(--panel); 
+}
+
+.sopir { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    width: 54px; 
+    border-right: 2px dashed var(--line);
+    color: var(--muted); 
+    font-size: .85rem; 
+    writing-mode: vertical-rl; 
+    transform: rotate(180deg); 
+}
+
+.bariskursi { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+    align-items: center; 
+}
+
+.lorong { height: 20px; }
+
+.kursi { 
+    position: relative; 
+    display: block; 
+    width: 50px; 
+    height: 46px; 
+    margin: 0; 
+}
+
+.pemilihankursi { 
+    position: absolute; 
+    inset: 0; 
+    width: 100%; 
+    height: 100%; 
+    margin: 0; 
+    opacity: 0; 
+    cursor: pointer; 
+}
+
+.kursi span, .kursiterisi { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    width: 50px; 
+    height: 46px;
+    border-radius: 8px 8px 12px 12px; 
+    font: 700 .95rem var(--display); 
+}
+
+.kursi span { 
+    border: 2px solid var(--teal); 
+    color: var(--teal); 
+    background: transparent; 
+}
+
+.kursi:hover span { background: rgba(53, 208, 186, .15); }
+
+.kursi input:checked + span { 
+    background: var(--amber); 
+    border-color: var(--amber); 
+    color: #1a1300; 
+}
+
+.kursi input:focus-visible + span { 
+    outline: 3px solid #fff; 
+    outline-offset: 1px; 
+}
+
+.kursiterisi { 
+    background: var(--taken); 
+    border: 2px solid var(--taken); 
+    color: var(--muted); 
+    text-decoration: line-through; 
+}
+
+.denah { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 18px; 
+    margin-top: 16px; 
+    color: var(--muted); 
+    font-size: .9rem; 
+}
+
+.denah i { 
+    display: inline-block; 
+    width: 14px; 
+    height: 14px; 
+    margin-right: 6px; 
+    border-radius: 4px; 
+    vertical-align: -2px; 
+}
+
+.tiket { 
+    position: sticky; 
+    top: 16px; 
+    border: 1px solid var(--line); 
+    border-radius: 14px; 
+    background: var(--panel); 
+    overflow: hidden; 
+}
+
+.ringkasanperjalanan { 
+    padding: 18px 20px; 
+    background: var(--panel2); 
+    border-bottom: 2px dashed var(--line); 
+}
+
+.ringkasanperjalanan .jalur { 
+    font: 700 1.3rem/1.2 var(--display); 
+}
+
+.ringkasanperjalanan .jalur small { 
+    display: block; 
+    font: 400 .85rem "Times New Roman", sans-serif; 
+    color: var(--muted); 
+}
+
+.ringkasanperjalanan dl { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 10px; 
+    margin: 14px 0 0; 
+}
+
+.ringkasanperjalanan dt { 
+    font-size: .8rem; 
+    color: var(--muted); 
+}
+
+.ringkasanperjalanan dd { 
+    margin: 0; 
+    font: 700 1.5rem/1.15 var(--display); 
+    color: var(--amber); 
+}
+
+.ringkasanperjalanan .peringatan { 
+    margin: 10px 0 0; 
+    min-height: 1.3em; 
+    font-size: .85rem; 
+    color: var(--err); 
+}
+
+.isian { padding: 8px 20px 20px; }
+
 
 </style>
 
