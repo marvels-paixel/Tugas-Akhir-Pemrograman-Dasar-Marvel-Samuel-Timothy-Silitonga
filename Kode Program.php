@@ -203,13 +203,13 @@ if ($aksi === 'pesan') {
     $otomatis = isset($_POST['otomatis']);
 
 if ($nama === '' || mb_strlen($nama) > 40) {
-    setPesan('error', 'Nama penumpang wajib diisi (maksimal 40 karakter).');
+    setpesan('error', 'Nama penumpang wajib diisi (maksimal 40 karakter).');
 
 } elseif ($telp === null) {
-    setPesan('error', 'Nomor HP tidak valid.');
+    setpesan('error', 'Nomor HP tidak valid.');
 
 } elseif (!array_key_exists($kategori, KATEGORI)) {
-    setPesan('error', 'Pilih kategori penumpang yang tersedia.');
+    setpesan('error', 'Pilih kategori penumpang yang tersedia.');
 
 } else {
 
@@ -224,18 +224,18 @@ if ($otomatis) {
 }
 
 if ($posisi === null) {
-    setPesan('error', 'Pilih satu kursi pada denah, atau centang pilihan kursi otomatis.');
+    setpesan('error', 'Pilih satu kursi pada denah, atau centang pilihan kursi otomatis.');
 
 } elseif (!cekkursikosong($denah, $posisi[0], $posisi[1])) {
-    setPesan('error', 'Kursi tidak tersedia. Pilih kursi lain.');
+    setpesan('error', 'Kursi tidak tersedia. Pilih kursi lain.');
 
 } elseif ($posisi[0] === 0 && $kategori === 'anak') {
-    setPesan('error', 'Penumpang anak tidak boleh duduk di kursi depan.');
+    setpesan('error', 'Penumpang anak tidak boleh duduk di kursi depan.');
 
 } else {
 
-$harga = hitungHarga($rute, $armada, $posisi[0], $kategori);
-$kode  = buatKodeTiket();
+$harga = hitungharga($rute, $armada, $posisi[0], $kategori);
+$kode  = buatokdetiket();
 
 $denah[$posisi[0]][$posisi[1]] = [
     'kode'     => $kode,
@@ -246,3 +246,161 @@ $denah[$posisi[0]][$posisi[1]] = [
 ];
 
 $_SESSION['denah'][$kunci] = $denah;
+
+setpesan('ok', sprintf(
+    'Tiket %s: %s duduk di kursi %s, harga %s.',
+    $kode, $nama, labelkursi($posisi[0], $posisi[1]), rupiah($harga)
+));
+
+} elseif ($aksi === 'batal') {
+    $tr = (int) ($_POST['tr'] ?? -1);
+    $tj = (int) ($_POST['tj'] ?? -1);
+    $baris  = (int) ($_POST['baris'] ?? -1);
+    $kolom  = (int) ($_POST['kolom'] ?? -1);
+
+if (isset(RUTE[$tr]) && isset(JAM_BERANGKAT[$tj])) {
+    $kunciBatal = $tr . '-' . $tj;
+
+    $dn = ambildenah($kunciBatal, buatarmada(RUTE[$tr]['armada']));
+
+    if (isset($dn[$baris][$kolom]) && $dn[$baris][$kolom] !== null) {
+        $kode = $dn[$baris][$kolom]['kode'];
+
+        $dn[$baris][$kolom] = null;
+
+        $_SESSION['denah'][$kunciBatal] = $dn;
+
+        setpesan('ok', "Tiket $kode dibatalkan, kursi " . labelkursi($baris, $kolom) . ' kosong kembali.');
+    }
+}
+
+header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?') . "?rute=$idxRute&jam=$idxJam");
+exit;
+
+$pesan = $_SESSION['pesan'] ?? null;
+unset($_SESSION['pesan']);
+
+$statTrip = hitungterisi($denah); 
+
+?>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TravelSeat - Pemesanan Kursi Travel Online</title>
+
+<style>
+    :root {
+    --night: #0e1626; 
+    --panel: #16223a; 
+    --panel2: #1c2b48; 
+    --line: #2b3c5e;
+    --text: #e8edf6; 
+    --muted: #9fb0cc; 
+    --amber: #ffb703; 
+    --teal: #35d0ba;
+    --taken: #2a3550; 
+    --err: #ff8a80; 
+    --ok: #5eead4;
+
+    --display: "Times New Roman", Times, serif;
+}
+* {box-sizing: border-box;}
+
+body { 
+    margin: 0; 
+    background: var(--night); 
+    color: var(--text);
+    font: 16px/1.5 "Times New Roman", system-ui, sans-serif; 
+}
+
+a { color: inherit; text-decoration: none; }
+
+:focus-visible {  outline: 3px solid var(--amber);  outline-offset: 2px; }
+
+.berangkat { 
+    padding: 22px 5vw 0; 
+    background: linear-gradient(#0a111e, var(--night)); 
+    border-bottom: 1px solid var(--line); 
+}
+
+.judul { 
+    margin: 0; 
+    font: 700 2.4rem/1 var(--display); 
+    letter-spacing: .02em; 
+}
+
+.subjudul { 
+    display: block; 
+    margin-top: 6px; 
+    font: 400 .95rem/1.3 "Segoe UI", sans-serif; 
+    color: var(--muted); 
+    letter-spacing: 0; 
+}
+
+.rute { 
+    display: flex; 
+    gap: 8px; 
+    margin-top: 20px; 
+    overflow-x: auto; 
+    padding-bottom: 2px; 
+}
+
+.tombolrute {  
+    flex: 0 0 auto; 
+    padding: 10px 18px; 
+    border: 1px solid var(--line); 
+    border-bottom: 0;
+    border-radius: 8px 8px 0 0; 
+    background: var(--panel); 
+    color: var(--muted); 
+    font: 600 1.05rem var(--display); 
+}
+
+.hargadirute { 
+    display: block; 
+    font: 400 .8rem "Times New Roman", sans-serif; 
+}
+
+.ruteyanglagidipilih { 
+    background: var(--amber); 
+    border-color: var(--amber); 
+    color: #1a1300; 
+}
+
+.ruteyanglagidipilih2 { 
+    color: #4a3600; 
+}
+
+.jam { 
+    display: flex; 
+    gap: 10px; 
+    padding: 14px 5vw; 
+    background: var(--panel); 
+    border-bottom: 1px solid var(--line); 
+    overflow-x: auto; 
+}
+
+.tomboljam { 
+    flex: 0 0 auto; 
+    min-width: 104px; 
+    padding: 8px 14px; 
+    border: 1px solid var(--line); 
+    border-radius: 8px; 
+    background: var(--night); 
+}
+
+.tulisanjam { 
+    display: block; 
+    font: 700 1.5rem/1.1 var(--display); 
+}
+
+.informasijumlahkursi { 
+    font-size: .8rem; 
+    color: var(--muted); 
+}
+
+</style>
+
